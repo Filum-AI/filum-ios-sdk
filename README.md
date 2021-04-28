@@ -53,7 +53,7 @@ FilumBDP.initWithToken("INSERT_YOUR_WRITE_KEY_HERE", serverUrl: URL(string: "INS
 ```
 
 ### Identify
-Use this method right after user has just logged in
+Use this method right after user has been authenticated or user info has been updated. `properties` can be `nil`.
 
 ```objectivec
 [[FilumBDP sharedInstance] identify:@"INSERT THE USER ID" properties:@{

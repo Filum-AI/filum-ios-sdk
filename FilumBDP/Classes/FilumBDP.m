@@ -118,11 +118,6 @@ static FilumBDP *instance;
     }];
 }
 
-- (void)identify:(NSString *)userId
-{
-    [self identify:user_id properties:nil]
-}
-
 - (void)track:(NSString *)eventName properties:(NSDictionary *)properties
 {
     if (!eventName) {
@@ -132,14 +127,19 @@ static FilumBDP *instance;
                           userInfo:nil];
         @throw e;
     }
+
+    NSMutableDictionary *data = @{
+        @"event_type": @"track",
+        @"event_name": eventName,
+    }
+
+    if (properties) {
+        [data setValue:properties forKey:@"event_params"]
+    }
     
     [self addToQueue:@{
         @"type": @"event",
-        @"data": {
-            @"event_type": @"track",
-            @"event_name": eventName,
-            @"event_params": properties
-        }
+        @"data": data
     }];
 }
 

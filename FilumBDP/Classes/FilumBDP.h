@@ -33,7 +33,6 @@
 + (void)destroy;
 
 - (void)track:(nonnull NSString *)eventName properties:(nullable NSDictionary*) properties;
-- (void)identify:(nonnull NSString *)userId;
 - (void)identify:(nonnull NSString *)userId properties:(nullable NSDictionary*) properties;
 
 - (void)reset;
