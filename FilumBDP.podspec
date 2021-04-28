@@ -3,7 +3,7 @@
 # valid spec before submitting.
 
 Pod::Spec.new do |s|
-  s.name             = 'Filum IOS SDK'
+  s.name             = 'FilumBDP'
   s.version          = '0.1.0'
   s.summary          = 'Filum Business Data Platform IOS SDK'
 
