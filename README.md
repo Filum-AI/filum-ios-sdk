@@ -39,7 +39,7 @@ Import the header file
 ```
 
 ```swift
-import GIAP
+import FilumBDP
 ```
 
 Initialize the library
@@ -62,7 +62,7 @@ Use this method right after user has been authenticated or user info has been up
 ```
 
 ```swift
-GIAP.sharedInstance().identify("INSERT THE USER ID", properties: {
+FilumBDP.sharedInstance().identify("INSERT THE USER ID", properties: {
     "name": "name"
 })
 ```
@@ -78,7 +78,7 @@ Use a string to represent the event name and a dictionary to represent the event
 ```
 
 ```swift
-GIAP.sharedInstance().track("Purchase", properties: {
+FilumBDP.sharedInstance().track("Purchase", properties: {
     "total_amount": totalAmount
 })
 ```
@@ -91,5 +91,5 @@ Use this method right after user has just logged out
 ```
 
 ```swift
-GIAP.sharedInstance().reset()
+FilumBDP.sharedInstance().reset()
 ```
