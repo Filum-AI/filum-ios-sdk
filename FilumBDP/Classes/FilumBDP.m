@@ -101,21 +101,30 @@ static FilumBDP *instance;
                           userInfo:nil];
         @throw e;
     }
-
-    NSMutableDictionary *data = @{
+    
+    NSMutableDictionary *data = [NSMutableDictionary dictionary];
+    [data addEntriesFromDictionary:@{
         @"event_type": @"identify",
-        @"event_name": "Identify",
+        @"event_name": @"Identify",
+        @"event_id": [[NSUUID UUID] UUIDString],
         @"user_id": userId,
-    }
+    }];
 
     if (properties) {
-        [data setValue:properties forKey:@"event_params"]
+        [data addEntriesFromDictionary:@{
+            @"event_params": [self convertEventParams:properties]
+        }];
     }
     
     [self addToQueue:@{
         @"type": @"identify",
         @"data": data
     }];
+}
+
+- (void)identify:(NSString *)userId
+{
+    [self identify:userId properties:nil];
 }
 
 - (void)track:(NSString *)eventName properties:(NSDictionary *)properties
@@ -128,19 +137,28 @@ static FilumBDP *instance;
         @throw e;
     }
 
-    NSMutableDictionary *data = @{
+    NSMutableDictionary *data = [NSMutableDictionary dictionary];
+    [data addEntriesFromDictionary:@{
         @"event_type": @"track",
         @"event_name": eventName,
-    }
-
+        @"event_id": [[NSUUID UUID] UUIDString],
+    }];
+    
     if (properties) {
-        [data setValue:properties forKey:@"event_params"]
+        [data addEntriesFromDictionary:@{
+            @"event_params": [self convertEventParams:properties]
+        }];
     }
     
     [self addToQueue:@{
         @"type": @"event",
         @"data": data
     }];
+}
+
+- (void)track:(NSString *)eventName
+{
+    [self track:eventName properties:nil];
 }
 
 - (void)reset
@@ -165,12 +183,14 @@ static FilumBDP *instance;
     if (self.disabled) {
         return;
     }
-    
-    NSTimeInterval epochInterval = [[NSDate date] timeIntervalSince1970];
-    NSNumber *epochMiliseconds = @(round(epochInterval * 1000));
+
+    NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
+    [dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
+    [dateFormatter setDateFormat: @"yyyy-MM-dd'T'HH:mm:ss.SSSSSSSZZZZZ"];
     
     NSMutableDictionary *taskdata = [data mutableCopy];
-    [taskdata setValue:epochMiliseconds forKey:@"time"];
+
+    [taskdata setValue:[dateFormatter stringFromDate:[NSDate date]] forKey:@"time"];
     [taskdata setValue:VERSION forKey:@"version"];
     [self.taskQueue addObject:taskdata];
     
@@ -260,10 +280,24 @@ static FilumBDP *instance;
         NSMutableArray *currentEventBatch = [NSMutableArray array];
         NSMutableArray *queueCopyForFlushing = [self.taskQueue mutableCopy];
 
-        NSMutableDictionary *context = [NSMutableDictionary dictionary];
-        [context addEntriesFromDictionary:[self.device getDeviceProperties]];
-        [context addEntriesFromDictionary:@{
-            @"$device_id": self.deviceId
+        NSMutableArray *context = [NSMutableArray array];
+
+        NSDictionary *deviceProperties = [self.device getDeviceProperties];
+        for (NSString* key in deviceProperties) {
+            NSDictionary *record = @{
+                @"key": key,
+                @"value": @{
+                    @"string_value": deviceProperties[key]
+                }
+            };
+            [context addObject:record];
+        }
+
+        [context addObject:@{
+            @"key": @"device_id",
+            @"value": @{
+                @"string_value": self.deviceId
+            }
         }];
         
         while ([self shouldShiftEventFromQueue:queueCopyForFlushing]) {
@@ -359,6 +393,21 @@ static FilumBDP *instance;
 - (void)applicationDidBecomeActive:(NSNotificationCenter *)notification
 {
     [self startFlushTimer];
+}
+
+- (NSMutableArray *) convertEventParams:(NSDictionary *)params
+{
+    NSMutableArray *listParams = [NSMutableArray array];
+    for (NSString* key in params) {
+        NSDictionary *param = @{
+            @"key": key,
+            @"value": @{
+                @"string_value": params[key]
+            }
+        };
+        [listParams addObject:param];
+    }
+    return listParams;
 }
 
 @end
