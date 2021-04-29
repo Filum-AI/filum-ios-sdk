@@ -16,9 +16,7 @@ Pod::Spec.new do |s|
   s.author           = { 'hoanghiep106' => 'hoanghiepnguyen106@gmail.com' }
   s.source           = { :git => 'https://github.com/Filum-AI/filum-ios-sdk.git', :tag => s.version.to_s }
 
-  s.ios.deployment_target = '10.0'
-  s.tvos.deployment_target = '10.0'
-  s.osx.deployment_target = '10.13'
+  s.ios.deployment_target = '8.0'
 
   s.source_files = 'FilumBDP/Classes/**/*'
   
