@@ -1,10 +1,3 @@
-//
-//  FilumBDPDevice.m
-//  FilumBDP
-//
-//  Created by Tran Viet Thang on 2/11/20.
-//
-
 #import <SystemConfiguration/SystemConfiguration.h>
 #include <sys/sysctl.h>
 

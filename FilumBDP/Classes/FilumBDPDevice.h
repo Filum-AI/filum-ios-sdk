@@ -1,10 +1,3 @@
-//
-//  FilumBDPDevice.h
-//  FilumBDP
-//
-//  Created by Tran Viet Thang on 2/11/20.
-//
-
 #ifndef FilumBDPDevice_h
 #define FilumBDPDevice_h
 

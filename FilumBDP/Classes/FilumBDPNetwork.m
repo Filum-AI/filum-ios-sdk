@@ -1,10 +1,3 @@
-//
-//  FilumBDPNetwork.m
-//  FilumBDP
-//
-//  Created by Tran Viet Thang on 2/7/20.
-//
-
 #import <Foundation/Foundation.h>
 #import "FilumBDPNetwork.h"
 

@@ -1,10 +1,3 @@
-//
-//  FilumBDPStorage+Private.h
-//  FilumBDP
-//
-//  Created by Tran Viet Thang on 2/12/20.
-//
-
 #ifndef FilumBDPStorage_Private_h
 #define FilumBDPStorage_Private_h
 

@@ -1,10 +1,3 @@
-//
-//  Constants.m
-//  FilumBDP
-//
-//  Created by Tran Viet Thang on 2/10/20.
-//
-
 #import <Foundation/Foundation.h>
 
 NSString *const VERSION = @"1.0.0";

@@ -1,10 +1,3 @@
-//
-//  Constants.h
-//  FilumBDP
-//
-//  Created by Tran Viet Thang on 2/10/20.
-//
-
 #ifndef Constants_h
 #define Constants_h
 

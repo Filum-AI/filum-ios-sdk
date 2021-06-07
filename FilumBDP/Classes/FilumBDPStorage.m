@@ -1,10 +1,3 @@
-//
-//  FilumBDPStorage.m
-//  FilumBDP
-//
-//  Created by Tran Viet Thang on 2/12/20.
-//
-
 #import <Foundation/Foundation.h>
 #import "FilumBDPStorage.h"
 #import "FilumBDPStorage+Private.h"

@@ -1,10 +1,3 @@
-//
-//  FilumBDP.h
-//  FilumBDP
-//
-//  Created by Tran Viet Thang on 2/7/20.
-//
-
 #ifndef FilumBDP_h
 #define FilumBDP_h
 

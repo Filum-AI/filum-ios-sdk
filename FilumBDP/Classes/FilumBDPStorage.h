@@ -1,10 +1,3 @@
-//
-//  FilumBDPStorage.h
-//  FilumBDP
-//
-//  Created by Tran Viet Thang on 2/12/20.
-//
-
 #ifndef FilumBDPStorage_h
 #define FilumBDPStorage_h
 
