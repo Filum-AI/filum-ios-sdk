@@ -39,7 +39,7 @@ Import the header file
 ```
 
 ```swift
-import GIAP
+import FilumBDP
 ```
 
 Initialize the library
@@ -55,14 +55,18 @@ FilumBDP.initWithToken("INSERT_YOUR_WRITE_KEY_HERE", serverUrl: URL(string: "INS
 ### Identify
 Use this method right after user has been authenticated or user info has been updated. `properties` can be `nil`.
 
+`Objective-C`
 ```objectivec
+[[FilumBDP sharedInstance] identify:@"INSERT THE USER ID"]
 [[FilumBDP sharedInstance] identify:@"INSERT THE USER ID" properties:@{
     @"name": name
 }];
 ```
 
+`Swift`
 ```swift
-GIAP.sharedInstance().identify("INSERT THE USER ID", properties: {
+FilumBDP.sharedInstance().identify("INSERT THE USER ID")
+FilumBDP.sharedInstance().identify("INSERT THE USER ID", properties: {
     "name": "name"
 })
 ```
@@ -71,14 +75,18 @@ GIAP.sharedInstance().identify("INSERT THE USER ID", properties: {
 
 Use a string to represent the event name and a dictionary to represent the event properties. `properties` can be `nil`.
 
+`Objective-C`
 ```objectivec
+[[FilumBDP sharedInstance] track:@"Purchase"]
 [[FilumBDP sharedInstance] track:@"Purchase" properties:@{
     @"total_amount": totalAmount
 }];
 ```
 
+`Swift`
 ```swift
-GIAP.sharedInstance().track("Purchase", properties: {
+FilumBDP.sharedInstance().track("Purchase")
+FilumBDP.sharedInstance().track("Purchase", properties: {
     "total_amount": totalAmount
 })
 ```
@@ -86,10 +94,12 @@ GIAP.sharedInstance().track("Purchase", properties: {
 ### Reset
 Use this method right after user has just logged out
 
+`Objective-C`
 ```objectivec
 [[FilumBDP sharedInstance] reset];
 ```
 
+`Swift`
 ```swift
-GIAP.sharedInstance().reset()
+FilumBDP.sharedInstance().reset()
 ```
