@@ -62,10 +62,14 @@
     NSMutableDictionary *p = [NSMutableDictionary dictionary];
     
     [p addEntriesFromDictionary:self.consistentProperties];
-    
-    [p setValue:self.radio forKey:@"radio"];
-    [p setValue:self.carrier forKey:@"carrier"];
-    [p setValue:@(self.wifi) forKey:@"wifi"];
+
+    NSDictionary *network = @{
+        @"cellular": (self.radio ? 1 : 0),
+        @"wifi": self.wifi.integerValue,
+        @"carrier": self.carrier
+    };
+
+    [p setValue:network forKey:@"network"];
     
     return p;
 }
@@ -109,16 +113,23 @@
     id deviceModel = [self deviceModel] ? : [NSNull null];
     CGSize size = [UIScreen mainScreen].bounds.size;
     UIDevice *device = [UIDevice currentDevice];
+
+    NSDictionary *deviceProperties = ;
     
     [p addEntriesFromDictionary:@{
-        @"name": @"filum-ios-sdk",
-        @"version": VERSION,
-        @"manufacturer": @"Apple",
-        @"model": deviceModel,
-        @"os":  [device systemName],
-        @"os_version": [device systemVersion],
-        @"screen_height": @((NSInteger)size.height),
-        @"screen_width": @((NSInteger)size.width)
+        @"library": @{
+            @"name": SOURCE,
+            @"version": VERSION,
+        },
+        @"os": @{
+            @"name":  [device systemName],
+            @"version": [device systemVersion],
+        },
+        @"screen": @{
+            @"density": -1,
+            @"height": @((NSInteger)size.height),
+            @"width": @((NSInteger)size.width)
+        },
     }];
     
     return p;
