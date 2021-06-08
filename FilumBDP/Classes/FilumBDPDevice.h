@@ -18,9 +18,9 @@
 @property (atomic) bool wifi;
 @property (atomic, copy) NSDictionary *consistentProperties;
 
-+ (instancetype)initWithToken:(NSString *)token;
++ (instancetype) initWithToken:(NSString *)token;
 - (NSDictionary *) getDeviceProperties;
-- (NSString *)getIDFA;
-- (NSString *)getIdentifierForVendor;
+- (NSString *) getIDFA;
+- (NSString *) getIdentifierForVendor;
 
 @end
