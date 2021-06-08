@@ -279,26 +279,11 @@ static FilumBDP *instance;
         
         NSMutableArray *currentEventBatch = [NSMutableArray array];
         NSMutableArray *queueCopyForFlushing = [self.taskQueue mutableCopy];
-
-        NSMutableArray *context = [NSMutableArray array];
-
-        NSDictionary *deviceProperties = [self.device getDeviceProperties];
-        for (NSString* key in deviceProperties) {
-            NSDictionary *record = @{
-                @"key": key,
-                @"value": @{
-                    @"string_value": deviceProperties[key]
-                }
-            };
-            [context addObject:record];
-        }
-
-        [context addObject:@{
-            @"key": @"device_id",
-            @"value": @{
-                @"string_value": self.deviceId
-            }
-        }];
+        
+        NSMutableDictionary *context = [self.device getDeviceProperties];
+        // Set Device ID and advertising ID
+        [context setValue:self.deviceId forKeyPath:@"device.id"];
+        if ([self.device getIDFA]) [context setValue:[self.device getIDFA] forKeyPath:@"device.advertising_id"];
         
         while ([self shouldShiftEventFromQueue:queueCopyForFlushing]) {
             NSDictionary *task = [queueCopyForFlushing objectAtIndex:0];

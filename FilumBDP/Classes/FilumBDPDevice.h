@@ -1,10 +1,3 @@
-//
-//  FilumBDPDevice.h
-//  FilumBDP
-//
-//  Created by Tran Viet Thang on 2/11/20.
-//
-
 #ifndef FilumBDPDevice_h
 #define FilumBDPDevice_h
 
@@ -25,9 +18,9 @@
 @property (atomic) bool wifi;
 @property (atomic, copy) NSDictionary *consistentProperties;
 
-+ (instancetype)initWithToken:(NSString *)token;
++ (instancetype) initWithToken:(NSString *)token;
 - (NSDictionary *) getDeviceProperties;
-- (NSString *)getIDFA;
-- (NSString *)getIdentifierForVendor;
+- (NSString *) getIDFA;
+- (NSString *) getIdentifierForVendor;
 
 @end

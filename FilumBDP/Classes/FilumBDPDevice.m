@@ -1,10 +1,3 @@
-//
-//  FilumBDPDevice.m
-//  FilumBDP
-//
-//  Created by Tran Viet Thang on 2/11/20.
-//
-
 #import <SystemConfiguration/SystemConfiguration.h>
 #include <sys/sysctl.h>
 
@@ -64,15 +57,16 @@
     self.reachability = NULL;
 }
 
-- (NSDictionary *)getDeviceProperties
+- (NSDictionary *) getDeviceProperties
 {
     NSMutableDictionary *p = [NSMutableDictionary dictionary];
+    [p addEntriesFromDictionary: self.consistentProperties];
     
-    [p addEntriesFromDictionary:self.consistentProperties];
-    
-    [p setValue:self.radio forKey:@"radio"];
-    [p setValue:self.carrier forKey:@"carrier"];
-    [p setValue:@(self.wifi) forKey:@"wifi"];
+    NSDictionary *network = [NSMutableDictionary dictionary];
+    [network setValue:@(self.radio ? 1 : 0) forKey:@"cellular"];
+    [network setValue:@(self.wifi ? 1 : 0) forKey:@"wifi"];
+    if (self.carrier) [network setValue:self.carrier forKey:@"carrier"];
+    [p setValue:network forKey:@"network"];
     
     return p;
 }
@@ -107,31 +101,50 @@
     NSMutableDictionary *p = [NSMutableDictionary dictionary];
     
     // Use setValue semantics to avoid adding keys where value can be nil.
-    [p setValue:[[NSBundle mainBundle] infoDictionary][@"CFBundleVersion"] forKey:@"app_build_number"];
-    [p setValue:[[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] forKey:@"app_version_string"];
+    NSMutableDictionary *app = [NSMutableDictionary dictionary];
+    NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
+    NSString *appBuild = [[NSBundle mainBundle] infoDictionary][@"CFBundleVersion"];
+    NSString *appVersion = [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
+    if (appBuild) [app setValue:appBuild forKey:@"build"];
+    if (appVersion) [app setValue:appVersion forKey:@"version"];
+    if (appName) [app setValue:appName forKey:@"name"];
     
-    CTCarrier *carrier = [self.telephonyInfo subscriberCellularProvider];
-    [p setValue:carrier.carrierName forKey:@"carrier"];
+    [p setValue:app forKey:@"app"];
     
-    id deviceModel = [self deviceModel] ? : [NSNull null];
-    CGSize size = [UIScreen mainScreen].bounds.size;
     UIDevice *device = [UIDevice currentDevice];
+    id deviceModel = [self getDeviceModel] ? : [NSNull null];
+    NSString *deviceName = [device name];
+    NSString *deviceType = [device model];
+    NSMutableDictionary *deviceInfo = [NSMutableDictionary dictionary];
+    [deviceInfo setValue:MANUFACTURER forKey:@"name"];
+    [deviceInfo setValue:deviceModel forKey:@"model"];
+    if (deviceName) [deviceInfo setValue:deviceName forKey:@"name"];
+    if (deviceType) [deviceInfo setValue:deviceType forKey:@"type"];
+    [p setValue:deviceInfo forKey:@"device"];
     
-    [p addEntriesFromDictionary:@{
-        @"name": @"filum-ios-sdk",
+    NSDictionary *library = @{
+        @"name": SOURCE,
         @"version": VERSION,
-        @"manufacturer": @"Apple",
-        @"model": deviceModel,
-        @"os":  [device systemName],
-        @"os_version": [device systemVersion],
-        @"screen_height": @((NSInteger)size.height),
-        @"screen_width": @((NSInteger)size.width)
-    }];
+    };
+    [p setValue:library forKey:@"library"];
+    
+    NSDictionary *os = @{
+        @"name":  [device systemName],
+        @"version": [device systemVersion],
+    };
+    [p setValue:os forKey:@"os"];
+    
+    CGSize size = [UIScreen mainScreen].bounds.size;
+    NSDictionary *screen = @{
+        @"height": @((NSInteger)size.height),
+        @"width": @((NSInteger)size.width)
+    };
+    [p setValue:screen forKey:@"screen"];
     
     return p;
 }
 
-- (NSString *)deviceModel
+- (NSString *)getDeviceModel
 {
     NSString *results = nil;
     size_t size;
